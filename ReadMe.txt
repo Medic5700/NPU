@@ -5,7 +5,15 @@
 #assumtion: A node can send one argument to many nodes, a node can RECIVE one argument from many nodes (First come, first serve) (IE: one argument can infact be reciveing data from multiple nodes)
 #assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
 
-Changelog 
+Changelog:
+v10->Git:
+	Switchover to use of Git for version management
+	TODO add documentation to all functions
+	TODO test functionality of everything
+	TODO add version number into code
+	TODO is a copy of baseNodes.py inside the main program?
+	TODO edit readme to be more readable
+	TODO enable automated testing
 v9->v10:
 	TODO: Get execution statistics on nodes
 	added ability to specify time to sleep between steps
