@@ -11,10 +11,7 @@ assumtion: a node may recive feedback from another node, such feedback is requir
 Changelog:
 v10->Git v0.11:
 	Switchover to use of Git for version management //after a year of two of not touching this code... so many things to fix...
-	TODO add documentation to all functions
-	TODO is a copy of baseNodes.py inside the main program?
 	TODO enable automated testing
-	TODO add proper debuging options
 	BUG unable to load programs from subdirectories properly
 v9->v10:
 	TODO: Get execution statistics on nodes

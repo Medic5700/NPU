@@ -12,18 +12,19 @@ debug = False #enables display of additional data
 debugMode = True #enables debug logging
 recursionDepth = 256 #the depth that encapsulated nodes will be parsed, only used for nodeList initialization
 stepLimit = 256 #controls how many 'steps' a program can take at most
-stepDelay = 0 #seconds to delay between steps, can be a real
+stepDelay = 0.0 #seconds to delay between steps, a real
 
 #Other options
-debugLevel = 0
+debugLevel = 0 #the level of detail to log, higher is more detailed
 debugOutput = "NPUEngine.log"
 
 #-------------------------------------------------------------------------------
 class Debug:
     """Class for logging and debuging"""
-    def __init__(self, debugMode, file="NPUEngine.log"):
+    def __init__(self, debugMode, level=0, file="NPUEngine.log"):
         self.__filename = file
         self.showDebug = debugMode #Bool
+        self.level = level
         
     def __save(self, text):
         """Function to save each log entry"""
@@ -61,12 +62,25 @@ class Debug:
         
         only writes input to stdout/log file when showDebug is True"""
         if (self.showDebug):
-            temp = "Debug:"
+            temp = "Debug0:"
             for i in args:
                 temp += "\t" + str(i) + "\n"
             print(temp, end="") #fixes issue where log and sceen output newlines don't match
             self.__save(temp)
-error = Debug(debugMode, debugOutput) #initialize debuging
+            
+    def debug1(self, *args):
+        """takes n number of strings, pushes to stdout and log file
+        
+        only writes input to stdout/log file when showDebug is True
+        Level 1 debuging"""
+        if (self.showDebug and (self.level >= 1)):
+            temp = "Debug1:"
+            for i in args:
+                temp += "\t" + str(i) + "\n"
+            print(temp, end="") #fixes issue where log and sceen output newlines don't match
+            self.__save(temp)
+            
+error = Debug(debugMode, debugLevel, debugOutput) #initialize debuging
 
 error.log("Starting NPUEngine " + _VersionNumber + " ==========================================")
 #imports functions from other files
@@ -479,12 +493,12 @@ while (_step < stepLimit) and (_ioDelta>0):
             output = partialFunction()
             setData(i,_dataDelta,_nodeList, output)
           
-    error.debug(" i/o = " + str(_ioDelta))    
-    error.debug(" dataDelta = " +str(_dataDelta))
+    error.debug1(" i/o = " + str(_ioDelta))    
+    error.debug1(" dataDelta = " +str(_dataDelta))
     
     mergeData(_data,_dataDelta)
     
-    error.debug(" data = " +str(_data))
+    error.debug1(" data = " +str(_data))
     
     #executes all meta nodes, NOT IN PARALLEL
     keys = [] #gets around the 'can't change what you are itterating over' error
