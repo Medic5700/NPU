@@ -2,12 +2,14 @@ import inspect # https://docs.python.org/3.4/library/inspect.html
 import copy # https://docs.python.org/2/library/copy.html
 import functools # http://stackoverflow.com/questions/3188048/how-to-bind-arguments-to-given-values-in-python-functions
 import baseNodes
+import time # https://docs.python.org/3.4/library/time.html
 
 #User changable stuff?
 toImport = ["program1"] #list of modules to import for makeing the Nural Net
 debug = False #enables display of additional data
 recursionDepth = 256 #the depth that encapsulated nodes will be parsed, only used for nodeList initialization
-stepLimit = 256 #controls how many 'steps' a program can take
+stepLimit = 256 #controls how many 'steps' a program can take at most
+stepDelay = 0.25 #seconds to delay between steps, can be a real
 
 #imports functions from other files
 _modules = []
@@ -64,6 +66,7 @@ class Output(baseNodes.BaseNode):
 engineInput = Input("engineInput")
 engineOutput = Output("engineOutput")
 
+#-------------------------------------------------------------------------------
 
 def validateNodes(x):
     #parses a dictionary of nodes, checks if nodes have basic required functions, sets variables if needed
@@ -220,24 +223,10 @@ class NID:
 def createRoutingTable(nodeList):
     tempDim = 0
     for i in nodeList:
-        #if i.dimInput != None and i.dimOutput != None: #just incase
-        '''
-        try:
-            if nodeList[i].dimInput > tempDim:
-                tempDim = nodeList[i].dimInput
-        except:
-            pass
-        try:
-            if nodeList[i].dimOutput > tempDim:
-                tempDim = nodeList[i].dimOutput   
-        except:
-            pass
-        '''
         if nodeList[i].dimInput > tempDim:
             tempDim = nodeList[i].dimInput 
         if nodeList[i].dimOutput > tempDim:
             tempDim = nodeList[i].dimOutput          
-                        
     return [[[[ False for i in range(tempDim)] for i in range(tempDim)] for i in range(len(nodeList.keys()))] for j in range(len(nodeList.keys()))]    
 
 def unencapsulate(nodeList, classList, depth, ismain=False):
@@ -286,16 +275,6 @@ def unencapsulate(nodeList, classList, depth, ismain=False):
                 tempNodeList.insert(0,classList['Relay'](current.dimInput))
                 tempNodeList.append(classList['Relay'](current.dimOutput))                
 
-            '''
-            if debug:
-                print("\t"+str(depth))
-                for i in range(len(tempRoutingTable)):
-                    for j in range(len(tempRoutingTable[i])):
-                        for k in range(len(tempRoutingTable[i][j])):
-                            for l in range(len(tempRoutingTable[i][j][k])):
-                                print("\t\t["+str(i)+"]["+str(j)+"]["+str(k)+"]["+str(l)+"]="+str(tempRoutingTable[i][j][k][l]))
-            '''
-            
             for i in range(len(tempNodeList)):
                 temp = NID.newNID()
                 tempNIDS.append(temp)
@@ -368,10 +347,7 @@ print("Creating Data Tables")
 def dataInit(data, nodeList):
     for i in nodeList.keys():
         data[i] = [[] for j in range(nodeList[i].dimInput)]
-'''
-def dataCompare(data1, data2):
-    return str(data1)==str(data2) #SHORTCUT
-'''
+
 def mergeData(data1, data2):
     #appends data2 to data1
     for i in data1.keys():
@@ -426,11 +402,14 @@ _metaToolBox = {}
 print("Starting net execution")
 _ioDelta = 1
 _step = 0
+_startTime = 0
+_endTime = time.clock()
 while (_step < stepLimit) and (_ioDelta>0):
     if debug: print("_step = " + str(_step))
     
     _ioDelta = 0
     _step +=1
+    _startTime = time.clock()
     
     #executes all nodes (if applicable)
     for i in _nodeList.keys():
@@ -450,12 +429,18 @@ while (_step < stepLimit) and (_ioDelta>0):
     if debug: print("\tdata = " +str(_data))
     
     #executes all meta nodes, NOT IN PARALLEL
-    keys = []
+    keys = [] #gets around the 'can't change what you are itterating over' error
     for i in _nodeList.keys():
         keys.append(i)    
     for i in keys:
-        if _nodeList[i].isMeta:
-            pass
+        if i in _nodeList.keys():
+            if _nodeList[i].isMeta:
+                pass
+    
+    #for controling how long to sleep
+    _endTime = time.clock()
+    time.sleep(max(0,stepDelay - (_endTime - _startTime)))
+    
 
 #-------------------------------------------------------------------------------
 print("net finished execution")

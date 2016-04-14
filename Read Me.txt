@@ -6,6 +6,9 @@
 #assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
 
 Changelog 
+v9->v10:
+	TODO: Get execution statistics on nodes
+	added ability to specify time to sleep between steps
 v8->v9:
 	Created some of the machenery needed to impliment 'metaNodes', created a metaNode class, created some variables related to executing metanodes, marked out a place to put code for metanodes
 	BUG: relay nodes only relays data when all args have input?
