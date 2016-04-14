@@ -4,13 +4,71 @@ import functools # http://stackoverflow.com/questions/3188048/how-to-bind-argume
 import baseNodes
 import time # https://docs.python.org/3.4/library/time.html
 
-#User changable stuff?
-toImport = ["program1"] #list of modules to import for makeing the Nural Net
+_VersionNumber = "v0.11"
+
+#User changable options
+toImport = ["ExampleProgram1"] #list of modules to import for makeing the Nural Net
 debug = False #enables display of additional data
+debugMode = True #enables debug logging
 recursionDepth = 256 #the depth that encapsulated nodes will be parsed, only used for nodeList initialization
 stepLimit = 256 #controls how many 'steps' a program can take at most
-stepDelay = 0.25 #seconds to delay between steps, can be a real
+stepDelay = 0 #seconds to delay between steps, can be a real
 
+#Other options
+debugLevel = 0
+debugOutput = "NPUEngine.log"
+
+#-------------------------------------------------------------------------------
+class Debug:
+    """Class for logging and debuging"""
+    def __init__(self, debugMode, file="NPUEngine.log"):
+        self.__filename = file
+        self.showDebug = debugMode #Bool
+        
+    def __save(self, text):
+        """Function to save each log entry"""
+        logfile = open(self.__filename, 'a')
+        try:
+            logfile.write(text)
+        except:
+            self.err("Error Occured in Error Logging Function: Attempting to report previous error")
+            for i in text:
+                try:
+                    logfile.write(i)
+                except:
+                    logfile.write("[ERROR]")
+        logfile.close()
+
+    def log(self, text):
+        """Takes string, pushes to stdout AND saves it to the log file
+        
+        For general logging, and non-fatal errors
+        """
+        temp = "[" + time.asctime() + "] Log: " + text
+        print(temp)
+        self.__save(temp + "\n")
+    
+    def err(self, text):
+        """Takes string, pushes to stdout and saves it to the log file
+        
+        Mainly meant for non-recoverable errors that should cause the program to terminate"""
+        temp = "[" + time.asctime() + "] ERR: " + text
+        print(temp)
+        self.__save(temp + "\n")        
+    
+    def debug(self, *args):
+        """takes n number of strings, pushes to stdout and log file
+        
+        only writes input to stdout/log file when showDebug is True"""
+        if (self.showDebug):
+            temp = "Debug:"
+            for i in args:
+                temp += "\t" + str(i) + "\n"
+            print(temp, end="") #fixes issue where log and sceen output newlines don't match
+            self.__save(temp)
+error = Debug(debugMode, debugOutput) #initialize debuging
+
+error.log("Starting NPUEngine " + _VersionNumber + " ==========================================")
 #imports functions from other files
 _modules = []
 for i in toImport: # http://stackoverflow.com/questions/951124/dynamic-loading-of-python-modules
@@ -67,14 +125,15 @@ engineInput = Input("engineInput")
 engineOutput = Output("engineOutput")
 
 #-------------------------------------------------------------------------------
-
 def validateNodes(x):
-    #parses a dictionary of nodes, checks if nodes have basic required functions, sets variables if needed
-    #returns true if nodes are verified
+    """
+    parses a dictionary of nodes, checks if nodes have basic required functions, sets variables if needed
+    returns true if nodes are verified
+    """
     
     for i in x:
         if inspect.isclass(x[i]):
-            print("\tERROR: "+str(x[i])+" is not initilized")
+            error.err(" ERROR: "+str(x[i])+" is not initilized")
             exit(-1)
         
         temp = None
@@ -145,35 +204,35 @@ def validateNodes(x):
         try:
             temp = x[i].main
         except:
-            print("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'main'")
+            error.err("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'main'")
             exit(-1)
             
         try:
             temp = x[i].__enoughInput__
         except:
             #print("\t\tERROR: node "+str(x[i])+"missing '__enoughInput__'")
-            print("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing '__enoughInput__'")
+            error.err("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing '__enoughInput__'")
             exit(-1)
         
         if x[i].isIO:
             try:
                 temp = x[i].close
             except:
-                print("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'close'")
+                error.err("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'close'")
                 exit(-1)        
                 
         if x[i].isWrapper:
             try:
                 temp = x[i].makeNodes
             except:
-                print("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'makeNodes'")
+                error.err("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'makeNodes'")
                 exit(-1)                 
             try:
                 temp = x[i].configRouting
             except:
-                print("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'configRouting'")
+                error.err("\t\tERROR: node "+str(i)+", object "+str(x[i])+" is missing 'configRouting'")
                 exit(-1)                 
-        if debug: print("\t\t"+ str(x[i]) + " dimInput:" + str(x[i].dimInput) + " dimOutput:" + str(x[i].dimOutput))
+        error.debug("  "+ str(x[i]) + " dimInput:" + str(x[i].dimInput) + " dimOutput:" + str(x[i].dimOutput))
             
     return True
     
@@ -190,26 +249,25 @@ class functionParsing:
         for i in inspect.getmembers(x):
             if inspect.isfunction(i[1]):
                 temp[i[0]] = i[1]
-        print("\tProcessing imported functions = " + str(temp))
+        error.log(" Processing imported functions = " + str(temp))
         for i in temp:
             t1 = baseNodes.BakedNode(temp[str(i)],len(inspect.getargspec(temp[i])[0]),1)
             _classList[str(i)] = t1
-            if debug:
-                print("\t\t"+"Processing Function: "+str(i))    
+            error.debug(" Processing Function: "+str(i))    
                 
 #-------------------------------------------------------------------------------
 #gets the functions from the imported source files, and populates the list
-print("Parsing Classes/Functions")
+error.log("Parsing Classes/Functions")
 functionParsing.getClasses(baseNodes)
 _classList.pop("BaseNode") #removes "BaseNode" from list, helps fix inheritence issue when setting dimInput
 for i in _modules:
     functionParsing.getClasses(i)
     functionParsing.getFunctions(i)
 
-print("\tImported classes = "+str(_classList))
+error.log(" Imported classes = "+str(_classList))
 
 #-------------------------------------------------------------------------------
-print("Starting Population of Node List")
+error.log("Starting Population of Node List")
 
 nids = [0] #SHORTCUT: This should be in it's own class
 class NID:
@@ -247,7 +305,7 @@ def unencapsulate(nodeList, classList, depth, ismain=False):
         pop wrapper
     '''    
     if depth>recursionDepth:
-        print("\tError: Max Recusion depth reach, depth=" + str(depth))
+        error.err("\tError: Max Recusion depth reach, depth=" + str(depth))
         exit(-1)
     
     #getting around the 'can't modify the dictionary you are currently itterating over' error
@@ -286,7 +344,7 @@ def unencapsulate(nodeList, classList, depth, ismain=False):
             endNID = tempNIDS[len(tempNIDS)-1]
                 
             if not(validateNodes(middleNodeList)):
-                print("\tError: Node Validation Failed -> " + str(_nodeList))
+                error.err("\tError: Node Validation Failed -> " + str(_nodeList))
                 exit(-1)                
             
             #creates routing table
@@ -328,21 +386,21 @@ _nodeList[0].nid=0
 _nodeList[0].dimInput=0 #Shortcut: allows unencapsulate to work without special code for base case
 _nodeList[0].dimOutput=0
 if validateNodes(_nodeList):
-    print("\tMain Node Validation complete")
+    error.log(" Main Node Validation complete")
 else:
-    print("\tError: Main Node Validation Failed, please check Main node")
+    error.err(" Error: Main Node Validation Failed, please check Main node")
     exit(-1)
 unencapsulate(_nodeList, _classList, 0, True)
 
 if validateNodes(_nodeList):
-    print("\tNode Validation complete")
+    error.log(" Node Validation complete")
 else:
-    print("\tError: Node Validation Failed -> " + str(_nodeList))
+    error.err(" Error: Node Validation Failed -> " + str(_nodeList))
     exit(-1)
-print("\tNumber of nodes = "+str(len(_nodeList.keys())))
+error.log(" Number of nodes = "+str(len(_nodeList.keys())))
 #-------------------------------------------------------------------------------
 #data Tables
-print("Creating Data Tables")
+error.log("Creating Data Tables")
 
 def dataInit(data, nodeList):
     for i in nodeList.keys():
@@ -399,13 +457,13 @@ dataInit(_dataDelta,_nodeList)
 _metaToolBox = {}
 
 #-------------------------------------------------------------------------------
-print("Starting net execution")
+error.log("Starting net execution")
 _ioDelta = 1
 _step = 0
 _startTime = 0
 _endTime = time.clock()
 while (_step < stepLimit) and (_ioDelta>0):
-    if debug: print("_step = " + str(_step))
+    error.debug("_step = " + str(_step))
     
     _ioDelta = 0
     _step +=1
@@ -421,12 +479,12 @@ while (_step < stepLimit) and (_ioDelta>0):
             output = partialFunction()
             setData(i,_dataDelta,_nodeList, output)
           
-    if debug: print("\ti/o = " + str(_ioDelta))    
-    if debug: print("\tdataDelta = " +str(_dataDelta))
+    error.debug(" i/o = " + str(_ioDelta))    
+    error.debug(" dataDelta = " +str(_dataDelta))
     
     mergeData(_data,_dataDelta)
     
-    if debug: print("\tdata = " +str(_data))
+    error.debug(" data = " +str(_data))
     
     #executes all meta nodes, NOT IN PARALLEL
     keys = [] #gets around the 'can't change what you are itterating over' error
@@ -443,9 +501,9 @@ while (_step < stepLimit) and (_ioDelta>0):
     
 
 #-------------------------------------------------------------------------------
-print("net finished execution")
-print("\tstep = "+str(_step))
+error.log("net finished execution")
+error.log(" step = "+str(_step))
 for i in _nodeList.keys():
     if _nodeList[i].isIO:
         _nodeList[i].close()
-print("\tI/O closed")
+error.log(" I/O closed")
