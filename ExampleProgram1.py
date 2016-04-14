@@ -11,7 +11,6 @@ class Main(baseNodes.Encapsulate):
         nodeList.append(classList['BakeInput']([i for i in range(20)],"1"))
         nodeList.append(classList['BakeInput']([i for i in range(20)],"2"))
         nodeList.append(classList['sum'])
-        #nodeList.append(classList['Output']("1"))
         nodeList.append(classList['Output']("1"))
     def configRouting(self, routingTable):
         #this configures the routingTable

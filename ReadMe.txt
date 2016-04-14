@@ -1,11 +1,29 @@
-#assumtion: an information unit is xor tuple, not type(None). A Node returns xor information unit, None, tuple
-#assumtion: when reads/writes to dataArray are zero per step, computation is finished
-#assumtion: some metaNodes have access to the engine variables, arrays contains all nodes, to enable dynamic rewiring of nodes
-#assumtion: each node completes execution after a bounded amount of time related to input
-#assumtion: A node can send one argument to many nodes, a node can RECIVE one argument from many nodes (First come, first serve) (IE: one argument can infact be reciveing data from multiple nodes)
-#assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
+Designed for highlevel rapid prototyping of nural node like processing. 
 
-Changelog 
+Notes:
+assumtion: an information unit is xor tuple, not type(None). A Node returns xor information unit, None, tuple
+assumtion: when reads/writes to dataArray are zero per step, computation is finished
+assumtion: some metaNodes have access to the engine variables, arrays contains all nodes, to enable dynamic rewiring of nodes
+assumtion: each node completes execution after a bounded amount of time related to input
+assumtion: A node can send one argument to many nodes, a node can RECIVE one argument from many nodes (First come, first serve) (IE: one argument can infact be reciveing data from multiple nodes)
+assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
+
+TODO:
+enable automated testing
+
+BUG:
+unable to load programs from subdirectories properly
+relay nodes only relays data when all args have input?
+
+Changelog:
+v10->Git v0.11:
+	Switchover to use of Git for version management //after a year of two of not touching this code... so many things to fix...
+	enabled debugging levels
+	proper debugging enabled
+	BUG unable to load programs from subdirectories properly
+v9->v10:
+	TODO: Get execution statistics on nodes
+	added ability to specify time to sleep between steps
 v8->v9:
 	Created some of the machenery needed to impliment 'metaNodes', created a metaNode class, created some variables related to executing metanodes, marked out a place to put code for metanodes
 	BUG: relay nodes only relays data when all args have input?
