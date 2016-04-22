@@ -1,4 +1,6 @@
-Designed for highlevel rapid prototyping of nural node like processing. Currently in the process of possibly being rebuilt from the ground up.
+Designed for highlevel rapid prototyping of nural node like processing. Inspired by the potential of IBM's TrueNorth Chip (and later on by the game TIS-100). Currently in the process of possibly being rebuilt from the ground up.
+
+It currently technically works... but needs an overhaul to work the way I want it (IE: to be able to be used easily with other programs)
 
 Notes:
 Module
@@ -24,7 +26,7 @@ relay nodes only relays data when all args have input?
 
 Changelog:
 v10->Git v0.11:
-	Switchover to use of Git for version management //after a year of two of not touching this code... so many things to fix...
+	Switchover to use of Git for version management //after a year of two of not touching this code... so many things to fix... and redesign...
 	enabled debugging levels
 	proper debugging enabled
 	BUG unable to load programs from subdirectories properly
