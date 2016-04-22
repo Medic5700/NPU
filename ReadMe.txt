@@ -1,12 +1,21 @@
-Designed for highlevel rapid prototyping of nural node like processing. 
+Designed for highlevel rapid prototyping of nural node like processing. Inspired by the potential of IBM's TrueNorth Chip (and later on by the game TIS-100). Currently in the process of possibly being rebuilt from the ground up.
+
+It currently technically works... but needs an overhaul to work the way I want it (IE: to be able to be used easily with other programs)
 
 Notes:
-assumtion: an information unit is xor tuple, not type(None). A Node returns xor information unit, None, tuple
-assumtion: when reads/writes to dataArray are zero per step, computation is finished
-assumtion: some metaNodes have access to the engine variables, arrays contains all nodes, to enable dynamic rewiring of nodes
-assumtion: each node completes execution after a bounded amount of time related to input
-assumtion: A node can send one argument to many nodes, a node can RECIVE one argument from many nodes (First come, first serve) (IE: one argument can infact be reciveing data from multiple nodes)
-assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
+Module
+ Should be able to take code from arbitrary source (file, string, compiled on the fly code)
+ Should be able to run multiple instances of engine simultainiously
+ Input and output should be able to be writen/read like files
+ Should be able to load, and save a net mid computation (for checkpoint purposes)
+ Should allow for debugging tools to step through a computation as it's being performed
+Nodes
+ assumtion: an information unit is xor tuple, not type(None). A Node returns xor information unit, None, tuple
+ assumtion: when reads/writes to dataArray are zero per step, computation is finished
+ assumtion: some metaNodes have access to the engine variables, arrays contains all nodes, to enable dynamic rewiring of nodes
+ assumtion: each node completes execution after a bounded amount of time related to input
+ assumtion: A node can send one argument to many nodes, a node can RECIVE one argument from many nodes (First come, first serve) (IE: one argument can infact be reciveing data from multiple nodes)
+ assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
 
 TODO:
 enable automated testing
@@ -17,7 +26,7 @@ relay nodes only relays data when all args have input?
 
 Changelog:
 v10->Git v0.11:
-	Switchover to use of Git for version management //after a year of two of not touching this code... so many things to fix...
+	Switchover to use of Git for version management //after a year of two of not touching this code... so many things to fix... and redesign...
 	enabled debugging levels
 	proper debugging enabled
 	BUG unable to load programs from subdirectories properly
