@@ -43,6 +43,8 @@ class NPUEngine:
     
     class Debug:
         """Class for logging and debuging"""
+        import time
+        
         def __init__(self, debugMode, level=0, file="NPUEngine.log"):
             self.__filename = file
             self.showDebug = debugMode #Bool
@@ -67,7 +69,7 @@ class NPUEngine:
             
             For general logging, and non-fatal errors
             """
-            temp = "[" + time.asctime() + "] Log: " + text
+            temp = "[" + self.time.asctime() + "] Log: " + text
             print(temp)
             self.__save(temp + "\n")
         
