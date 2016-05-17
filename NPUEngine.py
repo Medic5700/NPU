@@ -79,28 +79,16 @@ class NPUEngine:
             print(temp)
             self.__save(temp + "\n")        
         
-        def debug(self, *args):
+        def debug(self, level, *args):
             """takes n number of strings, pushes to stdout and log file
             
             only writes input to stdout/log file when showDebug is True"""
-            if (self.showDebug):
-                temp = "Debug0:"
+            if (self.showDebug and (self.level >= level)):
+                temp = "Debug" + str(level) + ":"
                 for i in args:
                     temp += "\t" + str(i) + "\n"
                 print(temp, end="") #fixes issue where log and sceen output newlines don't match
                 self.__save(temp)
-                
-        def debug1(self, *args):
-            """takes n number of strings, pushes to stdout and log file
-            
-            only writes input to stdout/log file when showDebug is True
-            Level 1 debuging"""
-            if (self.showDebug and (self.level >= 1)):
-                temp = "Debug1:"
-                for i in args:
-                    temp += "\t" + str(i) + "\n"
-                print(temp, end="") #fixes issue where log and sceen output newlines don't match
-                self.__save(temp)    
 
 _VersionNumber = "v0.11"
 
