@@ -89,3 +89,7 @@ class NPUEngine:
                     temp += "\t" + str(i) + "\n"
                 print(temp, end="") #fixes issue where log and sceen output newlines don't match
                 self.__save(temp)
+
+if (__name__ == "__main__"):
+    #engine testing is done here
+    engine1 = NPUEngine()
