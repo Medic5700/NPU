@@ -1,4 +1,4 @@
-Designed for highlevel rapid prototyping of nural node like processing. Inspired by the potential of IBM's TrueNorth Chip (and later on by the game TIS-100). Currently in the process of possibly being rebuilt from the ground up.
+Designed for highlevel rapid prototyping of node like processing. Inspired by the potential of IBM's TrueNorth Chip (and later on by the game TIS-100). Currently in the process of possibly being rebuilt from the ground up.
 
 It currently technically works... but needs an overhaul to work the way I want it (IE: to be able to be used easily with other programs)
 
