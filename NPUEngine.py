@@ -1,12 +1,10 @@
-import baseNodes
-
 class NPUEngine:
     import inspect
     import copy
     import functools
     import time
     
-    def __init__(self, stepLimit=256, debugMode=False, debugLevel=0, logfile="NPUEngine.log"):
+    def __init__(self, debugMode=False, debugLevel=0, logfile=None, stepLimit=256):
         #Higher debug level is more detailed [0,1]
         self._VersionNumber = "v0.12"
         self.error = self.Debug(debugMode, debugLevel, logfile)
@@ -24,11 +22,11 @@ class NPUEngine:
     def loadProgramRawCode(self, code):
         """Allows you to load a program from a string"""
         pass
-    
+    ''' #to be implemented later
     def loadProgramModual(self, name):
-        """Allows you to load a program from the same scope"""
+        """Allows you to load a program from the same scope?"""
         pass
-    
+    '''
     def write(self, nodeName, data):
         """Writes input to a specific input node"""
         pass
@@ -44,33 +42,34 @@ class NPUEngine:
     def burstRead(self, nodeName):
         """Reads all pending output from a specific output node"""
         pass
-    
+    ''' #to be implemented later
     def readAll(self):
         """Reads all output from all output nodes, returns a dictionary"""
         pass
-    
+    '''
     class Debug:
         """Class for logging and debuging"""
         import time
         
-        def __init__(self, debugMode, level=0, file="NPUEngine.log"):
-            self.__filename = file
+        def __init__(self, debugMode, level=0, file=None):
+            self.__filename = file #set to None if you don't want a log file writen
             self.showDebug = debugMode #Bool
             self.level = level
             
         def __save(self, text):
             """Function to save each log entry"""
-            logfile = open(self.__filename, 'a')
-            try:
-                logfile.write(text)
-            except:
-                self.err("Error Occured in Error Logging Function: Attempting to report previous error")
-                for i in text:
-                    try:
-                        logfile.write(i)
-                    except:
-                        logfile.write("[ERROR]")
-            logfile.close()
+            if (self.__filename != None):
+                logfile = open(self.__filename, 'a')
+                try:
+                    logfile.write(text)
+                except:
+                    self.err("Error Occured in Error Logging Function: Attempting to report previous error")
+                    for i in text:
+                        try:
+                            logfile.write(i)
+                        except:
+                            logfile.write("[ERROR]")
+                logfile.close()
     
         def log(self, text):
             """Takes string, pushes to stdout AND saves it to the log file
@@ -102,4 +101,4 @@ class NPUEngine:
 
 if (__name__ == "__main__"):
     #engine testing is done here
-    engine1 = NPUEngine()
+    engine1 = NPUEngine(True,2,"NPUEngine.log")
