@@ -33,8 +33,16 @@ class NPUEngine:
         """Writes input to a specific input node"""
         pass
     
+    def burstWrite(self, nodeName, dataList):
+        """Writes a list worth of input to a specific input node"""
+        pass
+    
     def read(self, nodeName):
         """Reads output from a specific output node"""
+        pass
+    
+    def burstRead(self, nodeName):
+        """Reads all pending output from a specific output node"""
         pass
     
     def readAll(self):

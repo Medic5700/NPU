@@ -1,11 +1,15 @@
-Designed for highlevel rapid prototyping of node like processing. Inspired by the potential of IBM's TrueNorth Chip (and later on by the game TIS-100). Currently in the process of possibly being rebuilt from the ground up.
+Designed for highlevel rapid prototyping of node like processing. Inspired by the potential of IBM's TrueNorth Chip (and later on by the game TIS-100). Currently in the process of being rebuilt from the ground up.
 
-It currently technically works... but needs an overhaul to work the way I want it (IE: to be able to be used easily with other programs)
+Running it (once it's rebuilt enough to run):
+	NPUEngine.py is the engine (can be run by itself to perform tests)
+	import the engine, and initilize it as a class
+	load the desired program (look in the examples folder for programs)
+	write input, read output from engine (look at bottom of NPUEngine.py for examples/engine testing)
 
 Notes:
 Module
  Should be able to take code from arbitrary source (file, string, compiled on the fly code)
- Should be able to run multiple instances of engine simultainiously
+ Should be able to run multiple instances of engine simultainiously (Is a class)
  Input and output should be able to be writen/read like files
  Should be able to load, and save a net mid computation (for checkpoint purposes)
  Should allow for debugging tools to step through a computation as it's being performed
@@ -16,13 +20,6 @@ Nodes
  assumtion: each node completes execution after a bounded amount of time related to input
  assumtion: A node can send one argument to many nodes, a node can RECIVE one argument from many nodes (First come, first serve) (IE: one argument can infact be reciveing data from multiple nodes)
  assumtion: a node may recive feedback from another node, such feedback is required AND must be timely (IE: no batch processing input, if that node could be getting feedback from a node it's sending data to)
-
-TODO:
-enable automated testing
-
-BUG:
-unable to load programs from subdirectories properly
-relay nodes only relays data when all args have input?
 
 Changelog:
 v10->Git v0.11:
