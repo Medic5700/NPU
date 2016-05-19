@@ -5,7 +5,7 @@ class NPUEngine:
     import time
     
     def __init__(self, debugMode=False, debugLevel=0, logfile=None, stepLimit=256):
-        #Higher debug level is more detailed [0,1]
+        #Higher debug level is more detailed [0,2] #0=regular logging, 1=program testing logging, 2=debug net while running
         self._VersionNumber = "v0.12"
         self.error = self.Debug(debugMode, debugLevel, logfile)
         self.error.log("Starting NPUEngine " + self._VersionNumber + " ==========================================")
@@ -22,11 +22,13 @@ class NPUEngine:
     def loadProgramRawCode(self, code):
         """Allows you to load a program from a string"""
         pass
+    
     ''' #to be implemented later
     def loadProgramModual(self, name):
         """Allows you to load a program from the same scope?"""
         pass
     '''
+    
     def write(self, nodeName, data):
         """Writes input to a specific input node"""
         pass
@@ -42,11 +44,13 @@ class NPUEngine:
     def burstRead(self, nodeName):
         """Reads all pending output from a specific output node"""
         pass
+    
     ''' #to be implemented later
     def readAll(self):
         """Reads all output from all output nodes, returns a dictionary"""
         pass
     '''
+    
     class Debug:
         """Class for logging and debuging"""
         import time
@@ -63,7 +67,7 @@ class NPUEngine:
                 try:
                     logfile.write(text)
                 except:
-                    self.err("Error Occured in Error Logging Function: Attempting to report previous error")
+                    self.error("Error Occured in Error Logging Function: Attempting to report previous error")
                     for i in text:
                         try:
                             logfile.write(i)
@@ -80,13 +84,21 @@ class NPUEngine:
             print(temp)
             self.__save(temp + "\n")
         
-        def err(self, text):
+        def error(self, text):
             """Takes string, pushes to stdout and saves it to the log file
             
             Mainly meant for non-recoverable errors that should cause the program to terminate"""
-            temp = "[" + time.asctime() + "] ERR: " + text
+            temp = "[" + self.time.asctime() + "] ERROR: " + text
             print(temp)
-            self.__save(temp + "\n")        
+            self.__save(temp + "\n")
+            
+        def warning(self, text):
+            """Takes string, pushes to stdout and saves it to the log file
+            
+            Meant for non-program ending bugs and errors"""
+            temp = "[" + self.time.asctime() + "] WARNING: " + text
+            print(temp)
+            self.__save(temp + "\n")          
         
         def debug(self, level, *args):
             """takes n number of strings, pushes to stdout and log file
