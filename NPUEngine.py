@@ -19,37 +19,47 @@ class NPUEngine:
         """Allows you to load a program from a file"""
         pass
     
+    ''' #API to be implemented later
     def loadProgramRawCode(self, code):
         """Allows you to load a program from a string"""
         pass
-    
-    ''' #to be implemented later
+        
     def loadProgramModual(self, name):
         """Allows you to load a program from the same scope?"""
-        pass
-    '''
-    
-    def write(self, nodeName, data):
-        """Writes input to a specific input node"""
         pass
     
     def burstWrite(self, nodeName, dataList):
         """Writes a list worth of input to a specific input node"""
         pass
     
-    def read(self, nodeName):
-        """Reads output from a specific output node"""
-        pass
-    
     def burstRead(self, nodeName):
         """Reads all pending output from a specific output node"""
         pass
     
-    ''' #to be implemented later
     def readAll(self):
         """Reads all output from all output nodes, returns a dictionary"""
         pass
+    
+    def status(self):
+        """Returns a string representing the status of the engine"""
+        pass
+    
+    def save(self, filepath):
+        """saves all neccassary parts of engine, including current state, to file. May impact performance"""
+        pass
+    
+    def load(self, filepath):
+        """loads a previously saved program net"""
+        pass
     '''
+    def read(self, nodeName):
+        """Reads output from a specific output node"""
+        pass
+    
+    def write(self, nodeName, data):
+        """Writes input to a specific input node"""
+        pass
+    
     
     class Debug:
         """Class for logging and debuging"""
