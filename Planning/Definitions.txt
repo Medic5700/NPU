@@ -1,0 +1,2 @@
+Program Net - The initialized net of a program (with all it's nodes and connections set)
+Program - The uninitialized source code for a program
