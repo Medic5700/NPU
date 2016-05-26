@@ -17,9 +17,26 @@ class NPUEngine:
         
         self.error.log("NPUEngine Initilized")
     
-    def loadProgramFile(self, filename):
-        """Allows you to load a program from a file"""
-        pass
+    def loadProgramFile(self, filepath):
+        """Allows you to load a program from a file, returns True/False for success"""
+        self.error.log("Attempting to open file: " + str(filepath))
+        file = None
+        try:
+            file = open(filepath, "r")
+        except:
+            self.error.warning("Could not open file: " + str(filepath))
+            return False
+        
+        code = file.read()
+        file.close()
+        self.error.debug(1, str(code))
+        
+        if (self._generateNet(code)):
+            self.error.log("Program Net initialized")
+            return True
+        else:
+            self.error.warning("Could not initialize Program Net")
+            return False
     
     ''' #API to be implemented later
     def loadProgramRawCode(self, code):
