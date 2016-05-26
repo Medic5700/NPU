@@ -7,6 +7,33 @@
 def sum(a,b):
     return a+b #all nodes will be treated as though they return a tuple, if you want to output a tuple, encase it in another tuple
 
+class node(): #note the lack of inheritance, functions not defined by user will have to be substituted in, con: hard to differentiat between nodes the user makes, and regular claases they intend to use
+    """This is a dummy class to show/plan the full syntax of a USER DEFINABLE node"""
+    def __init__(self):
+        """Initializes the node"""
+        #imports should go here?
+        #defines the dimenstions of the inputs/outputs, overrides what the engine thinks the input/output dimensions are
+        pass
+    
+    def main(self):
+        """Takes input args, returns tuple"""
+        #this is the program the node executes when it gets input
+        pass
+    
+    def __enoughInput__(self, *args):
+        """gets true/false representations of input as args (number of args equal to dimension of input), returns true/false if node has enough input to run properly"""
+        #this will be the default function that qould be included if it isn't specified
+        result = True
+        for i in args:
+            result = result & i
+        return result
+    
+    def makeNet(self, classList):
+        """Used for recursive program net definitions, see 'class main()' for details"""
+        nodeList = dict()
+        table = dict()
+        pass nodeList, table
+
 class main(): #little to no inheritance
     """This is the main class, it's the class the engine runs to figure out how everything fits together in this program"""
     
@@ -55,4 +82,4 @@ class main(): #little to no inheritance
         #more specific, more understandable, let you only put what you need, doesn't prevent multiple outputs to one input, allows multiple inputs from one output, not quite as streamlined? ([{BRACKETS!}]), allows easy additions to node routing information, doesn't allow multiple outputs from same node to be used as single input?
         table["sum"] = {0:{"input1":0}, 1:{"input2":0}}
         table["output1"] = {0:{"sum":0}}
-        return nodeList,table
+        return nodeList, table
