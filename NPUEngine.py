@@ -74,12 +74,32 @@ class NPUEngine:
     '''
     def read(self, nodeName):
         """Reads output from a specific output node"""
+        #should this return None when there is no output, or should it raise an error?
+        pass
+    
+    def canRead(self, nodeName):
+        """returns True if an output node has pending data"""
+        #is this function needed?
         pass
     
     def write(self, nodeName, data):
-        """Writes input to a specific input node"""
+        """Writes single input to a specific input node"""
         pass
     
+    def close(self):
+        """forcably stops programs, parallel processes, etc..., unallocates everything"""
+        pass
+    
+    def _generateNet(self, code):
+        """takes raw code, generates and initialized program net, returns true/false for success"""
+        pass
+    
+    def __parseCode(self, code):
+        pass
+    
+    def __newNID(self):
+        """generates a new NID for a node"""
+        pass
     
     class Debug:
         """Class for logging and debuging"""
