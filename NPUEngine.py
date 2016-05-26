@@ -127,3 +127,21 @@ class NPUEngine:
 if (__name__ == "__main__"):
     #engine testing is done here
     engine1 = NPUEngine(True,2,"NPUEngine.log")
+    engine1.loadProgramFile("Tests/.py") #should fail, non-halting
+    engine1.loadProgramFile("Tests/Program1.py")
+    for i in range(0,10):
+        engine1.write("input1", i)
+        engine1.write("input2", i)
+    '''
+    #one option for how to read engine output
+    output = engine1.read("output1")
+    while(output != None):
+        print("sum output: " + output)
+        output = engine1.read("output1")
+    engine1.close()
+    
+    #another option for reading engine output
+    while(engine1.canRead("output1")):
+        print("sum output: " + str(engine1.read("output1")))
+    engine1.close()
+    '''
