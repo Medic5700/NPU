@@ -1,2 +1,3 @@
 Contains stuff on the underlying planning for the engine.
 Definitions, how the engine should respond, etc...
+Mainly some general notes.

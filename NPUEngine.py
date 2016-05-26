@@ -3,15 +3,17 @@ class NPUEngine:
     import copy
     import functools
     import time
+    import pickle
     
-    def __init__(self, debugMode=False, debugLevel=0, logfile=None, stepLimit=256):
+    def __init__(self, debugMode=False, debugLevel=0, logfile=None):
         #Higher debug level is more detailed [0,2] #0=regular logging, 1=program testing logging, 2=debug net while running
         self._VersionNumber = "v0.12"
         self.error = self.Debug(debugMode, debugLevel, logfile)
         self.error.log("Starting NPUEngine " + self._VersionNumber + " ==========================================")
         
-        self._recursionDepth = 256 #the depth that encapsulated nodes will be parsed, only used for nodeList initialization
-        self._stepLimit = 256 #controls how many 'steps' a program can take at most
+        self._recursionDepth = 256 #the depth that recursive nodes will be parsed, only used for nodeList initialization
+        #self._stepLimit = 256 #controls how many 'steps' a program can take at most
+        #step limit should not be needed as it won't be executed as descrete steps like in the prototype NPU
         
         self.error.log("NPUEngine Initilized")
     
@@ -46,6 +48,7 @@ class NPUEngine:
     
     def save(self, filepath):
         """saves all neccassary parts of engine, including current state, to file. May impact performance"""
+        #will use the pickle module
         pass
     
     def load(self, filepath):
