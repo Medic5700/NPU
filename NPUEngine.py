@@ -161,6 +161,34 @@ class NPUEngine:
                 print(temp, end="") #fixes issue where log and sceen output newlines don't match
                 self.__save(temp)
 
+    class EngineNode:
+        def __init__(self):
+            self.nid = None #the unique identifier for this node
+            self.dimInput = None
+            self.dimOutput = None
+            self.refInput = {} #reference for nodes that pass this node data (double linked list)
+            self.refOutput = {} #reference for nodes that this node passes data to (doubly linked list)
+            self.inputData = {} #holds data passed to this node (for each input argument, hold an array of data for that input argument)
+            self.node = None #the initilized node
+            self.pause = False #tells weather this node should stop (for parallel processing, checks this before processing more input)
+            
+        def write(self,data):
+            """writes data to this node's input"""
+            #used to trigger/wake up function when parallel processing
+            pass
+        
+        def pause(self):
+            """Pauses execution by preventing more input from being passed into node"""
+            self.pause = True
+
+        def resume(self):
+            """Resumes execution"""
+            self.pause = False
+        
+        def _pushOutput(self,data):
+            """Takes a tuple, writes it to the appropriate nodes"""
+            pass
+        
 if (__name__ == "__main__"):
     #engine testing is done here
     engine1 = NPUEngine(True,2,"NPUEngine.log")
